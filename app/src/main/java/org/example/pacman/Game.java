@@ -211,26 +211,35 @@ public class Game {
         if (points == 300) {
             level = 2;
             levelView.setText(String.format(context.getResources().getString(R.string.level) + "%d", level));
+            for (int i = 0; i < enemies.size(); i++) {
+                enemies.get(i).setSpeed(this.enemies.get(i).getSpeed() + 2);
+            }
+
             totalEnemies += 1;
         } else if (points == 600) {
             level = 3;
             levelView.setText(String.format(context.getResources().getString(R.string.level) + "%d", level));
             for (int i = 0; i < enemies.size(); i++) {
-                enemies.get(i).setSpeed(this.enemies.get(i).getSpeed() + 4);
+                enemies.get(i).setSpeed(this.enemies.get(i).getSpeed() + 2);
             }
 
-            totalCoins -= 2;
+            totalCoins -= 1;
         } else if (points == 900) {
             level = 4;
             levelView.setText(String.format(context.getResources().getString(R.string.level) + "%d", level));
-
-            totalEnemies += 1;
+            for (int i = 0; i < enemies.size(); i++) {
+                enemies.get(i).setSpeed(this.enemies.get(i).getSpeed() + 1);
+            }
             for (int i = 0; i < coins.size(); i++) {
                 coins.get(i).setSpeed(coins.get(i).getSpeed() + 1);
             }
+
+            totalEnemies += 1;
+            totalCoins -= 1;
             } else if (points == 1200) {
             level = 5;
             levelView.setText(String.format(context.getResources().getString(R.string.level) + "%d", level));
+
             totalEnemies += 1;
             totalCoins -= 2;
             oxygenValue -= 10;
