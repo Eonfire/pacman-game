@@ -36,12 +36,12 @@ public class Game {
     private int totalCoins;
     private int coinsOnScreen;
 
-    private Handler timerHandler = new Handler();
-    private Runnable timerRunnable = new Runnable() {
+    private Handler gameHandler = new Handler();
+    private Runnable gameRunnable = new Runnable() {
         @Override
         public void run() {
             handleGameLogic();
-            timerHandler.postDelayed(this, 30);
+            gameHandler.postDelayed(this, 30);
         }
     };
 
@@ -50,7 +50,7 @@ public class Game {
         this.levelView = levelView;
         this.oxygenView = oxygenView;
         this.pointsView = pointsView;
-        timerHandler.postDelayed(timerRunnable, 0);
+        gameHandler.postDelayed(gameRunnable, 0);
     }
 
     public void setGameView(GameView view) {
@@ -163,7 +163,6 @@ public class Game {
         } else {
             enemies.add(new Enemy(x, y, enemyBitmap, 7, Direction.LEFT, MovementType.STRAIGHT));
         }
-
     }
 
 
