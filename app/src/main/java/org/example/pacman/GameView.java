@@ -37,9 +37,9 @@ public class GameView extends View {
         // Here we get the width and height
         w = canvas.getWidth();
         h = canvas.getHeight();
-        // Update the size for the canvas to the game.
+
         game.setSize(w, h);
-        game.spawnCoins(w, h);
+        game.spawnOrbs(w, h);
         game.spawnEnemies(w, h);
 
 
@@ -47,11 +47,10 @@ public class GameView extends View {
         canvas.drawColor(Color.BLACK);
 
         // Draw the pacman
-        game.getPacman().draw(canvas);
-        // Draw the coins
-        for (int i = 0; i < game.getCoins().size(); i++) {
-            GoldCoin coin = game.getCoins().get(i);
-            if (coin.isInGame()) coin.draw(canvas);
+        game.getPlayer().draw(canvas);
+        // Draw the orbs
+        for (int i = 0; i < game.getOrbs().size(); i++) {
+            if (game.getOrbs().get(i).isInGame()) game.getOrbs().get(i).draw(canvas);
         }
 
         for (int i = 0; i < game.getEnemies().size(); i++) {

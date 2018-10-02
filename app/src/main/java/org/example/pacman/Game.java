@@ -24,7 +24,7 @@ public class Game {
     private int level = 1;
     private int oxygenValue = 30;
 
-    private Entity pacman;
+    private Entity player;
 
     private boolean paused;
 
@@ -32,9 +32,9 @@ public class Game {
     private int totalEnemies;
     private int enemiesOnScreen;
 
-    private ArrayList<GoldCoin> coins = new ArrayList<>();
-    private int totalCoins;
-    private int coinsOnScreen;
+    private ArrayList<Entity> orbs = new ArrayList<>();
+    private int totalOrbs;
+    private int orbsOnScreen;
 
     private Handler gameHandler = new Handler();
     private Runnable gameRunnable = new Runnable() {
@@ -58,14 +58,14 @@ public class Game {
     }
 
     public void newGame() {
-        pacman = new Entity(50, 400, BitmapFactory.decodeResource(context.getResources(), R.drawable.astronaut), 12, Direction.NONE);
+        player = new Entity(50, 400, BitmapFactory.decodeResource(context.getResources(), R.drawable.astronaut), 12, Direction.NONE);
         enemies = new ArrayList<>();
         totalEnemies = 2;
         enemiesOnScreen = 0;
 
-        coins = new ArrayList<>();
-        totalCoins = 10;
-        coinsOnScreen = 0;
+        orbs = new ArrayList<>();
+        totalOrbs = 10;
+        orbsOnScreen = 0;
         oxygenValue = 30;
 
         points = 0;
@@ -90,25 +90,25 @@ public class Game {
         this.h = h;
     }
 
-    public Entity getPacman() {
-        return pacman;
+    public Entity getPlayer() {
+        return player;
     }
 
-    public ArrayList<GoldCoin> getCoins() {
-        return coins;
+    public ArrayList<Entity> getOrbs() {
+        return orbs;
     }
 
     public ArrayList<Enemy> getEnemies() {
         return enemies;
     }
 
-    public void spawnCoins(int canvasWidth, int canvasHeight) {
-        if (coinsOnScreen < totalCoins) {
+    public void spawnOrbs(int canvasWidth, int canvasHeight) {
+        if (orbsOnScreen < totalOrbs) {
             int i = 0;
 
-            while (i < totalCoins - coinsOnScreen) {
-                spawnNewCoin(canvasWidth, canvasHeight);
-                coinsOnScreen++;
+            while (i < totalOrbs - orbsOnScreen) {
+                spawnNewOrb(canvasWidth, canvasHeight);
+                orbsOnScreen++;
                 i++;
             }
         }
@@ -129,9 +129,9 @@ public class Game {
     private void handleGameLogic() {
         if (paused) return;
 
-        coinCollisionCheck();
+        orbCollisionCheck();
         enemyCollisionCheck();
-        pacman.move(w, h);
+        player.move(w, h);
 
         oxygen--;
         points++;
@@ -143,12 +143,12 @@ public class Game {
         gameView.invalidate();
     }
 
-    private void spawnNewCoin(int canvasWidth, int canvasHeight) {
+    private void spawnNewOrb(int canvasWidth, int canvasHeight) {
         Random r = new Random();
-        Bitmap coinBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.oxygen);
-        int x = r.nextInt(canvasWidth - coinBitmap.getWidth());
-        int y = r.nextInt(canvasHeight - coinBitmap.getHeight());
-        coins.add(new GoldCoin(x, y, coinBitmap, 4, Direction.LEFT));
+        Bitmap orbBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.oxygen);
+        int x = r.nextInt(canvasWidth - orbBitmap.getWidth());
+        int y = r.nextInt(canvasHeight - orbBitmap.getHeight());
+        orbs.add(new Entity(x, y, orbBitmap, 4, Direction.LEFT));
     }
 
     private void spawnNewEnemy(int canvasWidth, int canvasHeight) {
@@ -166,21 +166,21 @@ public class Game {
     }
 
 
-    private void coinCollisionCheck() {
-        for (int i = 0; i < coins.size(); i++) {
-            GoldCoin coin = coins.get(i);
+    private void orbCollisionCheck() {
+        for (int i = 0; i < orbs.size(); i++) {
+            Entity orb = orbs.get(i);
 
-            if (coin.isInGame()) {
-                if (coin.outOfBounds()) {
-                    coin.setInGame(false);
-                    coinsOnScreen--;
-                } else if (pacman.isColliding(coin)) {
-                    coins.get(i).setInGame(false);
-                    coinsOnScreen--;
+            if (orb.isInGame()) {
+                if (orb.outOfBounds()) {
+                    orb.setInGame(false);
+                    orbsOnScreen--;
+                } else if (player.isColliding(orb)) {
+                    orbs.get(i).setInGame(false);
+                    orbsOnScreen--;
                     oxygen += oxygenValue;
                     oxygenView.setText(String.format(context.getResources().getString(R.string.oxygen) + "%d", oxygen));
                 }
-                coin.move(w, h);
+                orb.move(w, h);
             }
         }
     }
@@ -198,7 +198,7 @@ public class Game {
                 if (enemy.outOfBounds()) {
                     enemy.setInGame(false);
                     enemiesOnScreen--;
-                } else if (pacman.isColliding(enemy)) {
+                } else if (player.isColliding(enemy)) {
                     newGame();
                 }
                 enemy.move(w, h);
@@ -222,25 +222,25 @@ public class Game {
                 enemies.get(i).setSpeed(this.enemies.get(i).getSpeed() + 2);
             }
 
-            totalCoins -= 1;
+            totalOrbs -= 1;
         } else if (points == 900) {
             level = 4;
             levelView.setText(String.format(context.getResources().getString(R.string.level) + "%d", level));
             for (int i = 0; i < enemies.size(); i++) {
                 enemies.get(i).setSpeed(this.enemies.get(i).getSpeed() + 1);
             }
-            for (int i = 0; i < coins.size(); i++) {
-                coins.get(i).setSpeed(coins.get(i).getSpeed() + 1);
+            for (int i = 0; i < orbs.size(); i++) {
+                orbs.get(i).setSpeed(orbs.get(i).getSpeed() + 1);
             }
 
             totalEnemies += 1;
-            totalCoins -= 1;
+            totalOrbs -= 1;
             } else if (points == 1200) {
             level = 5;
             levelView.setText(String.format(context.getResources().getString(R.string.level) + "%d", level));
 
             totalEnemies += 1;
-            totalCoins -= 2;
+            totalOrbs -= 2;
             oxygenValue -= 10;
         }
     }

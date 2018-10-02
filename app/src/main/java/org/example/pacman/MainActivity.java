@@ -65,16 +65,16 @@ public class MainActivity extends AppCompatActivity {
     private void initializeSwipeGestures(){
         gameView.setOnTouchListener(new OnSwipeTouchListener(this) {
             public void onSwipeTop() {
-                game.getPacman().setDirection((Direction.UP));
+                game.getPlayer().setDirection((Direction.UP));
             }
             public void onSwipeRight() {
-                game.getPacman().setDirection((Direction.RIGHT));
+                game.getPlayer().setDirection((Direction.RIGHT));
             }
             public void onSwipeLeft() {
-                game.getPacman().setDirection((Direction.LEFT));
+                game.getPlayer().setDirection((Direction.LEFT));
             }
             public void onSwipeBottom() {
-                game.getPacman().setDirection((Direction.DOWN));
+                game.getPlayer().setDirection((Direction.DOWN));
             }
         });
     }
